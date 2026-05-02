@@ -177,3 +177,59 @@ audio.onended = () => {
         playSong(currentIndex);
     }
 };
+
+// Add to app.js
+window.toggleLike = async (songId) => {
+    const user = auth.currentUser;
+    if (!user) return alert("Please login to like songs!");
+
+    const likeRef = doc(db, "likes", `${user.uid}_${songId}`);
+    const likeSnap = await getDoc(likeRef);
+
+    if (likeSnap.exists()) {
+        await deleteDoc(likeRef);
+        document.getElementById(`like-${songId}`).classList.replace('fa-solid', 'fa-regular');
+    } else {
+        await setDoc(likeRef, { userId: user.uid, songId: songId });
+        document.getElementById(`like-${songId}`).classList.replace('fa-regular', 'fa-solid');
+    }
+};
+
+async function getRecommendations(currentGenre) {
+    const q = query(collection(db, "songs"), where("genre", "==", currentGenre), limit(5));
+    const querySnapshot = await getDocs(q);
+    const recs = querySnapshot.docs.map(doc => doc.data());
+    
+    const recContainer = document.getElementById('recommendations');
+    recContainer.innerHTML = recs.map(song => `
+        <div class="flex items-center gap-3 p-2 hover:bg-white/10 rounded cursor-pointer">
+            <img src="${song.coverURL}" class="w-10 h-10 rounded">
+            <div>
+                <p class="text-sm font-medium">${song.title}</p>
+                <p class="text-xs text-zinc-400">${song.artist}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = audioCtx.createAnalyser();
+const source = audioCtx.createMediaElementSource(audio);
+source.connect(analyser);
+analyser.connect(audioCtx.destination);
+
+analyser.fftSize = 64;
+const bufferLength = analyser.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
+
+function drawVisualizer() {
+    requestAnimationFrame(drawVisualizer);
+    analyser.getByteFrequencyData(dataArray);
+    
+    const bars = document.querySelectorAll('.eq-bar');
+    bars.forEach((bar, i) => {
+        const height = dataArray[i] / 2;
+        bar.style.height = `${height}px`;
+    });
+}
+
