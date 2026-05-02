@@ -1,52 +1,122 @@
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #121212; }
-::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #1DB954; }
-
-/* Glass Effect for Player */
-footer {
-    background: rgba(18, 18, 18, 0.8) !important;
-    backdrop-filter: blur(20px);
+:root {
+    --bg-base: #000000;
+    --bg-elevated: #121212;
+    --bg-highlight: #1a1a1a;
+    --bg-press: #000000;
+    --text-main: #ffffff;
+    --text-sub: #a7a7a7;
+    --spotify-green: #1ed760;
+    --sidebar-width: 240px;
+    --player-height: 90px;
+    --transition-smooth: all 0.3s cubic-bezier(0.3, 0, 0, 1);
 }
 
-/* Song Card Animation */
-.song-card {
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    font-family: 'Circular', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
 }
 
-.song-card:hover {
-    transform: translateY(-8px);
-    background-color: #282828 !important;
+.app-layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    grid-template-rows: 1fr var(--player-height);
+    height: 100vh;
+    width: 100vw;
 }
 
-
-/* Mobile Optimization */
-@media (max-width: 768px) {
-    .container {
-        grid-template-columns: 1fr; /* Sidebar hidden */
-    }
-    
-    aside {
-        display: none; 
-    }
-
-    .player {
-        height: 70px;
-        padding: 0 10px;
-    }
-
-    /* Hide volume and extra info on mobile to save space */
-    .volume-controls, #player-artist {
-        display: none;
-    }
-
-    .player-controls {
-        width: 100%;
-    }
-
-    .song-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
+/* SIDEBAR STYLING */
+.sidebar-container {
+    background-color: var(--bg-base);
+    padding: 24px 12px;
+    display: flex;
+    flex-direction: column;
 }
+
+.brand { display: flex; align-items: center; gap: 8px; padding: 0 12px 24px 12px; }
+.brand-logo { color: var(--text-main); font-size: 28px; }
+.brand-name { font-weight: 700; font-size: 20px; letter-spacing: -0.5px; }
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    text-decoration: none;
+    color: var(--text-sub);
+    font-weight: 700;
+    transition: var(--transition-smooth);
+}
+
+.nav-link:hover, .nav-link.active { color: var(--text-main); }
+.nav-link i { font-size: 24px; }
+
+/* VIEWPORT & GRID */
+.viewport {
+    background: linear-gradient(to bottom, #222222 0%, var(--bg-base) 40%);
+    overflow-y: auto;
+    position: relative;
+    border-radius: 8px 0 0 0;
+    margin-top: 8px;
+}
+
+.view-header {
+    height: 64px;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background 0.2s;
+}
+
+.media-shelf {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+    padding: 16px 0;
+}
+
+/* PLAYER ENGINE STYLING */
+.player-wrapper {
+    grid-column: 1 / -1;
+    background-color: var(--bg-base);
+    border-top: 1px solid #282828;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.master-play-btn {
+    background-color: var(--text-main);
+    color: var(--bg-base);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.master-play-btn:hover { transform: scale(1.05); }
+
+/* SEEK BAR */
+.playback-bar-container { width: 100%; max-width: 500px; display: flex; align-items: center; gap: 8px; }
+.seek-slider {
+    flex: 1;
+    height: 4px;
+    background: #4d4d4d;
+    border-radius: 2px;
+    position: relative;
+    cursor: pointer;
+}
+.seek-progress { height: 100%; background: var(--text-main); border-radius: 2px; width: 0%; }
+.seek-slider:hover .seek-progress { background: var(--spotify-green); }
