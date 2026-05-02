@@ -1,1 +1,29 @@
+/* Mobile Optimization */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* Sidebar hidden */
+    }
+    
+    aside {
+        display: none; 
+    }
 
+    .player {
+        height: 70px;
+        padding: 0 10px;
+    }
+
+    /* Hide volume and extra info on mobile to save space */
+    .volume-controls, #player-artist {
+        display: none;
+    }
+
+    .player-controls {
+        width: 100%;
+    }
+
+    .song-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
