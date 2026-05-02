@@ -3,86 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Silent Music | Stream</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Silent Pro | Stream High-Fidelity Music</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <style>
-        body { background-color: #000; color: white; scrollbar-width: thin; scrollbar-color: #555 #000; }
-        .spotify-gradient { background: linear-gradient(to bottom, #222, #000); }
-        .song-card:hover .play-btn { opacity: 1; transform: translateY(0); }
-        input[type="range"] { accent-color: #1DB954; cursor: pointer; }
-    </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden">
+<body>
+    <div class="app-layout">
+        <!-- NAVIGATION SIDEBAR -->
+        <aside class="sidebar-container">
+            <div class="brand">
+                <div class="brand-logo"><i class="fa-brands fa-spotify"></i></div>
+                <span class="brand-name">Silent Pro</span>
+            </div>
 
-    <div class="flex flex-1 overflow-hidden">
-        <!-- SIDEBAR -->
-        <aside class="w-64 bg-black p-6 hidden md:flex flex-col gap-6">
-            <h1 class="text-2xl font-bold flex items-center gap-2">
-                <i class="fa-brands fa-spotify text-green-500 text-3xl"></i> Silent
-            </h1>
-            <nav class="space-y-4">
-                <a href="#" class="flex items-center gap-4 text-gray-400 hover:text-white transition"><i class="fa-solid fa-house"></i> Home</a>
-                <a href="#" class="flex items-center gap-4 text-gray-400 hover:text-white transition"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
-                <a href="#" class="flex items-center gap-4 text-gray-400 hover:text-white transition"><i class="fa-solid fa-lines-leaning"></i> Library</a>
+            <nav class="primary-nav">
+                <a href="#" class="nav-link active" data-view="home">
+                    <i class="fa-solid fa-house"></i> <span>Home</span>
+                </a>
+                <a href="#" class="nav-link" data-view="search">
+                    <i class="fa-solid fa-magnifying-glass"></i> <span>Search</span>
+                </a>
+                <a href="#" class="nav-link" data-view="library">
+                    <i class="fa-solid fa-lines-leaning"></i> <span>Your Library</span>
+                </a>
             </nav>
-            <div class="mt-8">
-                <button id="login-google" class="w-full py-2 bg-white text-black font-bold rounded-full hover:scale-105 transition">Login</button>
+
+            <div class="library-actions">
+                <div class="action-item"><div class="plus-box"><i class="fa-solid fa-plus"></i></div> <span>Create Playlist</span></div>
+                <div class="action-item"><div class="heart-box"><i class="fa-solid fa-heart"></i></div> <span>Liked Songs</span></div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="playlist-container" id="playlist-nav-list">
+                <!-- Dynamic Playlists -->
+                <a href="#" class="playlist-link">Heavy Metal Classics</a>
+                <a href="#" class="playlist-link">Coding Focus Lo-Fi</a>
+                <a href="#" class="playlist-link">Morning Coffee Jazz</a>
             </div>
         </aside>
 
-        <!-- MAIN CONTENT -->
-        <main class="flex-1 overflow-y-auto spotify-gradient p-8 pb-32">
-            <header class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold" id="greeting">Good evening</h2>
+        <!-- MAIN VIEWPORT -->
+        <main class="viewport">
+            <header class="view-header" id="dynamic-header">
+                <div class="header-controls">
+                    <button class="circle-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="circle-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div class="user-actions">
+                    <button class="upgrade-btn">Explore Premium</button>
+                    <div class="profile-pill" id="auth-trigger">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <span id="user-display-name">Sign In</span>
+                        <i class="fa-solid fa-caret-down"></i>
+                    </div>
+                </div>
             </header>
 
-            <section>
-                <h3 class="text-xl font-bold mb-4">Trending Music</h3>
-                <div id="song-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                    <!-- JS will inject song cards here -->
-                </div>
-            </section>
+            <div class="view-content">
+                <!-- HERO GRADIENT SECTION -->
+                <section class="content-block hero-bg">
+                    <h2 class="section-title">Good evening</h2>
+                    <div class="quick-grid">
+                        <!-- Six large cards for recent plays -->
+                        <div class="quick-card">
+                            <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=300" alt="">
+                            <span>Liked Songs</span>
+                            <button class="quick-play"><i class="fa-solid fa-play"></i></button>
+                        </div>
+                        <!-- ... more cards ... -->
+                    </div>
+                </section>
+
+                <section class="content-block">
+                    <div class="section-header">
+                        <h3>Made For You</h3>
+                        <a href="#">Show all</a>
+                    </div>
+                    <div class="media-shelf" id="featured-shelf">
+                        <!-- Skeleton Loaders appear here initially -->
+                    </div>
+                </section>
+
+                <section class="content-block">
+                    <div class="section-header">
+                        <h3>Recently Played</h3>
+                        <a href="#">Show all</a>
+                    </div>
+                    <div class="media-shelf" id="recent-shelf"></div>
+                </section>
+            </div>
         </main>
+
+        <!-- PERSISTENT PLAYER BAR -->
+        <footer class="player-wrapper">
+            <div class="active-track-info">
+                <img src="https://via.placeholder.com/60" id="track-art" alt="">
+                <div class="track-meta">
+                    <div class="track-name marquee" id="track-title">Welcome to Silent</div>
+                    <div class="track-artist" id="track-artist">Select music to begin</div>
+                </div>
+                <button class="heart-btn"><i class="fa-regular fa-heart"></i></button>
+            </div>
+
+            <div class="player-engine">
+                <div class="engine-controls">
+                    <button class="eng-btn" id="shuffle-toggle"><i class="fa-solid fa-shuffle"></i></button>
+                    <button class="eng-btn" id="prev-btn"><i class="fa-solid fa-backward-step"></i></button>
+                    <button class="master-play-btn" id="play-pause-btn"><i class="fa-solid fa-play"></i></button>
+                    <button class="eng-btn" id="next-btn"><i class="fa-solid fa-forward-step"></i></button>
+                    <button class="eng-btn" id="repeat-toggle"><i class="fa-solid fa-repeat"></i></button>
+                </div>
+                <div class="playback-bar-container">
+                    <span class="time-label" id="current-time">0:00</span>
+                    <div class="seek-slider" id="seek-slider">
+                        <div class="seek-progress" id="seek-progress"></div>
+                        <div class="seek-handle"></div>
+                    </div>
+                    <span class="time-label" id="total-time">0:00</span>
+                </div>
+            </div>
+
+            <div class="auxiliary-controls">
+                <button class="aux-btn"><i class="fa-solid fa-microphone"></i></button>
+                <button class="aux-btn"><i class="fa-solid fa-list-ul"></i></button>
+                <button class="aux-btn"><i class="fa-solid fa-computer"></i></button>
+                <div class="volume-module">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <div class="vol-slider">
+                        <div class="vol-progress" id="vol-level" style="width: 70%;"></div>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <!-- PLAYER BAR -->
-    <footer class="h-24 bg-zinc-900 border-t border-zinc-800 px-4 flex items-center justify-between fixed bottom-0 w-full">
-        <!-- Song Info -->
-        <div class="flex items-center gap-4 w-1/3">
-            <img id="player-cover" src="https://via.placeholder.com/60" class="w-14 h-14 rounded shadow-lg" alt="">
-            <div>
-                <div id="player-title" class="text-sm font-semibold truncate max-w-[150px]">Select a song</div>
-                <div id="player-artist" class="text-xs text-gray-400">Artist</div>
-            </div>
-            <i class="fa-regular fa-heart hover:text-green-500 cursor-pointer transition ml-4"></i>
-        </div>
-
-        <!-- Controls -->
-        <div class="flex flex-col items-center w-1/3 gap-2">
-            <div class="flex items-center gap-6">
-                <i id="prev" class="fa-solid fa-backward-step text-gray-400 hover:text-white cursor-pointer text-xl"></i>
-                <div id="play-pause" class="w-10 h-10 bg-white rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition">
-                    <i class="fa-solid fa-play text-black"></i>
-                </div>
-                <i id="next" class="fa-solid fa-forward-step text-gray-400 hover:text-white cursor-pointer text-xl"></i>
-            </div>
-            <div class="flex items-center gap-2 w-full max-w-md">
-                <span id="current-time" class="text-[10px] text-gray-400">0:00</span>
-                <input type="range" id="progress-bar" value="0" class="w-full h-1 bg-gray-600 rounded-lg appearance-none">
-                <span id="duration-time" class="text-[10px] text-gray-400">0:00</span>
-            </div>
-        </div>
-
-        <!-- Volume -->
-        <div class="flex items-center justify-end gap-3 w-1/3">
-            <i class="fa-solid fa-volume-high text-gray-400"></i>
-            <input type="range" id="volume-bar" value="80" class="w-24 h-1">
-        </div>
-    </footer>
-
-    <!-- Firebase SDKs -->
+    <!-- FIREBASE CORE -->
     <script type="module" src="app.js"></script>
 </body>
 </html>
