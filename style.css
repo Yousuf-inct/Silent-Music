@@ -1,3 +1,26 @@
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #121212; }
+::-webkit-scrollbar-thumb { background: #555; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #1DB954; }
+
+/* Glass Effect for Player */
+footer {
+    background: rgba(18, 18, 18, 0.8) !important;
+    backdrop-filter: blur(20px);
+}
+
+/* Song Card Animation */
+.song-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.song-card:hover {
+    transform: translateY(-8px);
+    background-color: #282828 !important;
+}
+
+
 /* Mobile Optimization */
 @media (max-width: 768px) {
     .container {
