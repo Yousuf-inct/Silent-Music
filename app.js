@@ -121,3 +121,59 @@ function formatTime(seconds) {
 }
 
 fetchSongs();
+
+// Search Functionality
+const searchInput = document.createElement('input'); 
+// (Assume you add a search input with id 'search-bar' in your HTML)
+
+const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    const filteredSongs = playlist.filter(song => 
+        song.title.toLowerCase().includes(term) || 
+        song.artist.toLowerCase().includes(term)
+    );
+    renderFilteredSongs(filteredSongs);
+};
+
+function renderFilteredSongs(songs) {
+    songGrid.innerHTML = songs.map((song, index) => `
+        <div class="song-card bg-zinc-900/50 p-4 rounded-lg hover:bg-zinc-800 transition group cursor-pointer" onclick="playSpecificSong('${song.id}')">
+            <!-- Card Content Same as Before -->
+        </div>
+    `).join('');
+}
+
+// Global Play by ID
+window.playSpecificSong = (id) => {
+    const index = playlist.findIndex(s => s.id === id);
+    if (index !== -1) playSong(index);
+};
+
+let isShuffle = false;
+let isRepeat = false;
+
+const shuffleBtn = document.getElementById('shuffle');
+const repeatBtn = document.getElementById('repeat');
+
+shuffleBtn.onclick = () => {
+    isShuffle = !isShuffle;
+    shuffleBtn.classList.toggle('text-green-500', isShuffle);
+};
+
+repeatBtn.onclick = () => {
+    isRepeat = !isRepeat;
+    repeatBtn.classList.toggle('text-green-500', isRepeat);
+};
+
+// Autoplay next song logic
+audio.onended = () => {
+    if (isRepeat) {
+        audio.play();
+    } else if (isShuffle) {
+        let nextIndex = Math.floor(Math.random() * playlist.length);
+        playSong(nextIndex);
+    } else {
+        currentIndex = (currentIndex + 1) % playlist.length;
+        playSong(currentIndex);
+    }
+};
